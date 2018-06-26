@@ -13,3 +13,18 @@ https://www.mcafee.com/enterprise/en-us/products/enterprise-security-manager.htm
 **MISP** threat sharing platform is free and open source software helping information sharing of threat and cyber security indicators.
 https://github.com/MISP/MISP
 
+## Prerequisites
+
+Download the [Latest Release](https://github.com/mohlcyber/MISP-STIX-ESM/releases)
+   * Extract the release .zip file
+   
+MISP platform installation ([Link](https://github.com/MISP/MISP)) (tested with MISP 2.4.92)
+
+Requests ([Link](http://docs.python-requests.org/en/master/user/install/#install))
+
+PyMISP library installation ([Link](https://github.com/MISP/PyMISP))
+```sh
+git clone https://github.com/MISP/PyMISP.git
+cd PyMISP/
+python setup.py install
+```
