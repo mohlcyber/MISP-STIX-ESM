@@ -3,7 +3,7 @@
 
 This Script will download MISP events in STIX format. McAfee ESM will be configured to poll STIX files from the folder location via SCP and run automated triage processes.
 
-<img width="1001" alt="screen shot 2018-06-26 at 16 26 00" src="https://user-images.githubusercontent.com/25227268/41918933-a4938108-795d-11e8-8b51-fbae89446622.png">
+<img width="955" alt="screen shot 2018-06-26 at 16 28 56" src="https://user-images.githubusercontent.com/25227268/41919152-16975b80-795e-11e8-9249-bafd8760fc47.png">
 
 ## Component Description
 
