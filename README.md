@@ -28,3 +28,20 @@ git clone https://github.com/MISP/PyMISP.git
 cd PyMISP/
 python setup.py install
 ```
+## Configuration
+MISP receives intelligence feeds from multiple sources. The provided script will export tagged events as STIX files and McAfee ESM will poll these STIX files for automated investigations.
+
+### misp_stix.py
+The misp_stix.py script will export tagged events as STIX files to a given location.
+
+Enter the MISP IP/URL and API key (line 12 and 13).
+
+<img width="324" alt="screen shot 2018-06-26 at 23 20 52" src="https://user-images.githubusercontent.com/25227268/41940049-c5f25510-7997-11e8-8ab8-7a38f3a625ed.png">
+
+Define the tag that should be searched for and exported (line 42).
+
+Optional: Specify the folder location for the STIX exports (line 32).
+
+### ESM Configuration
+
+Will be updated soon!
