@@ -36,7 +36,7 @@ The misp_stix.py script will export tagged events as STIX files to a given locat
 
 Enter the MISP IP/URL, API key, MISP Tag to look for and the location where the STIX files should be stored (line 12 - 15).
 
-<img width="438" alt="Screenshot 2019-11-07 at 11 43 19" src="https://user-images.githubusercontent.com/25227268/68382425-f1de1c00-0153-11ea-9982-3545d7ef0b22.png">
+<img width="359" alt="Screenshot 2019-11-07 at 11 48 33" src="https://user-images.githubusercontent.com/25227268/68382708-8fd1e680-0154-11ea-9854-850ba99aae41.png">
 
 ### ESM Configuration
 
