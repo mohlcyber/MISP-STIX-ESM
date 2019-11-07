@@ -1,82 +1,86 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# Written by mohlcyber v.0.2 07/11/2019
 
 import sys
-import json
 import requests
+import time
 
-from pymisp import PyMISP
+from pymisp import ExpandedPyMISP
 
 requests.packages.urllib3.disable_warnings()
 
-url = "https://misp-ip-address"
-key = "api-key"
+misp_url = 'https://1.1.1.1/'
+misp_key = 'API Key'
+misp_tag = 'McAfee: Export to ESM'
+misp_path = 'stix/'
 
-misp = PyMISP(url, key, False, 'json', debug=False)
 
-headers = {'Authorization': key,
-           'Accept': 'application/xml',
-           'content-type': 'application/xml',
-           'User-Agent': 'PyMISP'
-          }
+class MISP():
+    def __init__(self):
+        self.misp = ExpandedPyMISP(misp_url, misp_key, False)
+        self.headers = {
+            'Authorization': misp_key,
+            'Accept': 'application/xml',
+            'content-type': 'application/xml',
+            'User-Agent': 'PyMISP'
+        }
 
-def search(tag):
-    res = misp.search(tags=tag)
-    return res
+    def get_events(self, **kwargs):
+        tags = kwargs.pop('tags', None)
+        format = kwargs.pop('format', None)
+        eid = kwargs.pop('eid', None)
+        res = self.misp.search(eventid=eid, tags=tags, return_format=format)
+        return res
 
-def getstix(eventid):
-    weburl = '{0}/events/stix/download/{1}'.format(url, eventid)
-    res = requests.get(weburl, headers=headers, verify=False, allow_redirects=True)
+    def main(self):
+        results = self.get_events(tags=misp_tag, format='json')
+        try:
+            if results:
+                for result in results:
+                    eventid = result['Event']['id']
+                    euuid = result['Event']['uuid']
 
-    #Define the path to a folder that should contain the STIX files
-    with open('stix/misp_stix_%s.xml' % eventid, 'wb') as f:
-        f.write(res.content)
+                    stix = self.get_events(eid=eventid, format='stix')
+                    with open(misp_path + 'misp_stix_{0}.xml'.format(str(eventid)), 'w') as esm_stix:
+                        esm_stix.write(stix)
+                        esm_stix.close()
+                    print('SUCCESS: Successful exported the STIX file for event {0}.'.format(str(eventid)))
 
-def update_tag(uuid, ntag):
-    res = misp.tag(uuid, ntag)
-    return res
+                    objects = result['Event']['Object']
+                    for fields in objects:
+                        for attributes in fields['Attribute']:
+                            attuuid = attributes['uuid']
+
+                            if 'Tag' in attributes:
+                                for tags in attributes['Tag']:
+                                    atttag = tags['name']
+                                    if atttag == misp_tag:
+                                        self.misp.untag(attuuid, misp_tag)
+
+                    attributes = result['Event']['Attribute']
+                    for fields in attributes:
+                        attuuid = fields['uuid']
+
+                        if 'Tag' in fields:
+                            for tags in fields['Tag']:
+                                atttag = tags['name']
+                                if atttag == misp_tag:
+                                    self.misp.untag(attuuid, misp_tag)
+
+                    self.misp.untag(euuid, misp_tag)
+
+            else:
+                print('STATUS: Could not find Events that are tagged with {0}.'.format(str(misp_tag)))
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            print("ERROR: Error in {location}.{funct_name}() - line {line_no} : {error}"
+                  .format(location=__name__, funct_name=sys._getframe().f_code.co_name, line_no=exc_tb.tb_lineno,
+                          error=str(e)))
 
 
 if __name__ == '__main__':
 
-    tag = "indicator_found"
-
-    misp_result = search(tag)
-
-    try:
-        if not misp_result['response']:
-            pass
-        for event in misp_result['response']:
-            eventid = event['Event']['id']
-            euuid = event['Event']['uuid']
-
-            stix = getstix(eventid)
-            print('Successfully exported the STIX file for event %s' % eventid)
-
-            objects = event['Event']['Object']
-            for fields in objects:
-                for attributes in fields['Attribute']:
-                    attuuid = attributes['uuid']
-                    try:
-                        for tags in attributes['Tag']:
-                            atttag = tags['name']
-                            if atttag == tag:
-                                misp.untag(attuuid, tag)
-                    except:
-                        pass
-
-            attributes = event['Event']['Attribute']
-            for fields in attributes:
-                attuuid = fields['uuid']
-                try:
-                    for tags in attributes['Tag']:
-                        atttag = tags['name']
-                        if atttag == tag:
-                            misp.untag(attuuid, tag)
-                except:
-                    pass
-
-            misp.untag(euuid, tag)
-
-    except Exception as e:
-        print("Something went wrong %s" % e)
+    while True:
+        misp = MISP()
+        misp.main()
+        time.sleep(60)
