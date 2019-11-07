@@ -18,7 +18,7 @@ https://github.com/MISP/MISP
 Download the [Latest Release](https://github.com/mohlcyber/MISP-STIX-ESM/releases)
    * Extract the release .zip file
    
-MISP platform installation ([Link](https://github.com/MISP/MISP)) (tested with MISP 2.4.92)
+MISP platform installation ([Link](https://github.com/MISP/MISP)) (tested with MISP 2.4.117)
 
 Requests ([Link](http://docs.python-requests.org/en/master/user/install/#install))
 
@@ -34,13 +34,9 @@ MISP receives intelligence feeds from multiple sources. The provided script will
 ### misp_stix.py
 The misp_stix.py script will export tagged events as STIX files to a given location.
 
-Enter the MISP IP/URL and API key (line 12 and 13).
+Enter the MISP IP/URL, API key, MISP Tag to look for and the location where the STIX files should be stored (line 12 - 15).
 
-<img width="324" alt="screen shot 2018-06-26 at 23 20 52" src="https://user-images.githubusercontent.com/25227268/41940049-c5f25510-7997-11e8-8ab8-7a38f3a625ed.png">
-
-Define the tag that should be searched for and exported (line 42).
-
-Optional: Specify the folder location for the STIX exports (line 32).
+<img width="438" alt="Screenshot 2019-11-07 at 11 43 19" src="https://user-images.githubusercontent.com/25227268/68382425-f1de1c00-0153-11ea-9982-3545d7ef0b22.png">
 
 ### ESM Configuration
 
