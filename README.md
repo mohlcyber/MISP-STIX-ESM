@@ -18,7 +18,7 @@ https://github.com/MISP/MISP
 Download the [Latest Release](https://github.com/mohlcyber/MISP-STIX-ESM/releases)
    * Extract the release .zip file
    
-MISP platform installation ([Link](https://github.com/MISP/MISP)) (tested with MISP 2.4.117)
+MISP platform installation ([Link](https://github.com/MISP/MISP)) (tested with MISP 2.4.121)
 
 Requests ([Link](http://docs.python-requests.org/en/master/user/install/#install))
 
