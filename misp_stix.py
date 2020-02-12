@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Written by mohlcyber v.0.2 07/11/2019
+# Written by mohlcyber v.0.3 12/02/2020
 
 import sys
 import requests
@@ -10,6 +10,7 @@ from pymisp import ExpandedPyMISP
 requests.packages.urllib3.disable_warnings()
 
 misp_url = 'https://1.1.1.1/'
+misp_verify = False
 misp_key = 'API Key'
 misp_tag = 'McAfee: Export to ESM'
 misp_path = 'stix/'
@@ -21,7 +22,6 @@ class MISP():
         self.headers = {
             'Authorization': misp_key,
             'Accept': 'application/xml',
-            'content-type': 'application/xml',
             'User-Agent': 'PyMISP'
         }
 
@@ -32,6 +32,14 @@ class MISP():
         res = self.misp.search(eventid=eid, tags=tags, return_format=format)
         return res
 
+    def get_stix(self, eventid, format):
+        payload = {
+            "returnFormat": format,
+            "eventid": eventid
+        }
+        stix = requests.post(misp_url + 'events/restSearch', headers=self.headers, data=payload, verify=misp_verify)
+        return stix.content
+
     def main(self):
         results = self.get_events(tags=misp_tag, format='json')
         try:
@@ -40,9 +48,9 @@ class MISP():
                     eventid = result['Event']['id']
                     euuid = result['Event']['uuid']
 
-                    stix = self.get_events(eid=eventid, format='stix')
+                    stix = self.get_stix(eventid, 'stix')
                     with open(misp_path + 'misp_stix_{0}.xml'.format(str(eventid)), 'w') as esm_stix:
-                        esm_stix.write(stix)
+                        esm_stix.write(stix.decode())
                         esm_stix.close()
                     print('SUCCESS: Successful exported the STIX file for event {0}.'.format(str(eventid)))
 
